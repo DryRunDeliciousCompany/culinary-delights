@@ -1,0 +1,194 @@
+name: Build & Test
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "30_app/**"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+env:
+  WORKING_DIRECTORY: "30_app"
+
+defaults:
+  run:
+    shell: bash
+    working-directory: "30_app"
+
+jobs:
+  setup:
+    name: "Setup"
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Make/Restore npm cache
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+  lint-check:
+    name: "Lint Check"
+    needs:
+      - setup
+    runs-on: "ubuntu-20.04"
+    outputs:
+      summary: ${{ steps.lint-check-summary.outputs.summary }}
+    steps:
+      # Setup environment
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: setupnodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      # Restore cache
+      - name: Restore npm cache
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Execute test
+      - name: Lint check
+        id: lint-check-exec
+        run: |
+          npm ci
+          npm run lint
+
+      # Create report
+      - name: Create test result report
+        if: success() || failure()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Lint Report
+          path: ${{ env.WORKING_DIRECTORY }}/output/test/*.xml
+          reporter: java-junit
+      
+      # Make summary
+      - name: Make summary
+        if: success() || failure()
+        id: lint-check-summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << EOS
+          \`\`\`
+          $(cat ./output/test/lint-summary.txt)
+          \`\`\`
+          EOS
+
+      # Send slack message
+      - name: Send slack message
+        if: success() || failure()
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "attachments": [
+                {
+                  "color": "danger",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "*Lint Check Result* \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  unit-test:
+    name: "Unit Test"
+    needs:
+      - setup
+    runs-on: "ubuntu-20.04"
+    outputs:
+      summary: ${{ steps.unit-test.outputs.summary }}
+    steps:
+      # Setup environment
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: setupnodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      # Restore cache
+      - name: Restore npm cache
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Execute test
+      - name: Lint check
+        id: lint-check-exec
+        run: |
+          npm ci
+          npm run test
+
+      # Create report
+      - name: Create test result report
+        if: success() || failure()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Unit Test Report
+          path: ${{ env.WORKING_DIRECTORY }}/output/test/*.xml
+          reporter: jest-junit
+
+      # Make summary
+      - name: Make summary
+        if: success() || failure()
+        id: unit-test-summary
+        run: |
+          # Output summary message
+          cat >> $GITHUB_STEP_SUMMARY << EOS
+          \`\`\`
+          $(cat ./output/test/jest-summary.txt)
+          \`\`\`
+          EOS
+
+          # Escape message for slack notify
+          SUMMARY="$(cat ./output/test/jest-summary.txt)"
+          SUMMARY="${SUMMARY//'%'/'%25'}"
+          SUMMARY="${SUMMARY//$'\n'/'%0A'}"
+          SUMMARY="${SUMMARY//$'\r'/'%0D'}"
+          echo "::set-output name=summary::$SUMMARY)"
+
+      # Slack notify
+      - name: Slack notify
+        if: success() || failure()
+        uses: ./.github/actions/slack-notifier/
+        with:
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          slack-message-status: ${{ steps.lint-check-exec.outcome }}
+          slack-message-title: Unit Test summary
+          slack-message-body: ${{ steps.unit-test-summary.outputs.summary }}
