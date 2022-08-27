@@ -2,7 +2,7 @@ name: "[z] workflow2"
 
 on:
   workflow_run:
-    workflows: ["[z] workflow1"]
+    workflows: ["\[z\] workflow1"]
     types: [completed]
   workflow_dispatch:
 
