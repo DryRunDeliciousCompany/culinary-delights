@@ -51,7 +51,6 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$REGISTRY/$REPOSITORY:$IMAGE_TAG"
 
   publish:
     name: Publish
