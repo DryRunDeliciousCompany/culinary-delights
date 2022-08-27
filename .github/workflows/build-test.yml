@@ -6,7 +6,6 @@ on:
       - "main"
     paths:
       - "30_app/**"
-      - ".github/workflows/**"
   workflow_dispatch:
 
 env:
