@@ -1,0 +1,23 @@
+name: Slack Notifier
+inputs:
+  slack-webhook-url:
+    description: 'Slack Webhook URL'
+    required: true
+  slack-message-status:
+    description: 'Message status'
+    required: false
+  slack-message-title:
+    description: 'Message title'
+    required: true
+  slack-message-body:
+    description: 'Message body which is written by Markdown'
+    required: false
+  # slack-message-json-string:
+  #   description: 'Message JSON string'
+  #   required: true
+outputs:
+  time:
+    description: 'The time we greeted you'
+runs:
+  using: "node16"
+  main: "./dist/index.js"
