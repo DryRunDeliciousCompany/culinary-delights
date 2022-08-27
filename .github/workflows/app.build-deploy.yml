@@ -1,9 +1,8 @@
 name: "[app] Build & Deploy"
 
 on:
-  push:
-    paths:
-      - "30_app/**"
+  workflow_run:
+    workflows: ["[app] Test"]
   workflow_dispatch:
 
 env:
