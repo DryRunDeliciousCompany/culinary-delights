@@ -1,0 +1,15 @@
+name: "workflow1"
+
+on:
+  push:
+    path:
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+jobs:
+  sample:
+    name: Hello
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello"
+
