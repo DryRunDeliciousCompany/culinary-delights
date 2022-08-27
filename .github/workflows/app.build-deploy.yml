@@ -2,7 +2,7 @@ name: "[app] Build & Deploy"
 
 on:
   workflow_run:
-    workflows: ["[app] Test"]
+    workflows: ["* Test"]
     types: [completed]
   workflow_dispatch:
 
