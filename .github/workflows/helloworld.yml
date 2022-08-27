@@ -1,16 +1,13 @@
-name: Hello world !
+name: Hello World
 
 on:
   push:
-    branches:
-      - "main"
     paths:
       - ".github/workflows/**"
 
 jobs:
-  message:
-    name: "Display message"
-    runs-on: "ubuntu-20.04"
+  sample:
+    name: Hello World Job
+    runs-on: ubuntu-latest
     steps:
-      - name: show message
-        run: echo "Hello World"
+      - run: echo "Hello World !"
