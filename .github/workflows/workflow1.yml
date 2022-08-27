@@ -1,4 +1,4 @@
-name: "workflow1"
+name: "[z] workflow1"
 
 on:
   push:
