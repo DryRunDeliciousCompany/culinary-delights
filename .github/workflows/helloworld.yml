@@ -12,4 +12,5 @@ jobs:
     name: "Display message"
     runs-on: "ubuntu-20.04"
     steps:
-      - run: echo "Hello World"
+      - name: show message
+        run: echo "Hello World"
