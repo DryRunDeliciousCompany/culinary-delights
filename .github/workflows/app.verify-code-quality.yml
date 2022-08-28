@@ -1,0 +1,26 @@
+name: "[app] Verify code quality"
+
+on:
+  workflow_run:
+    workflows: ["* Test"]
+    types: [requested]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  setup:
+    name: "Setup"
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}}
