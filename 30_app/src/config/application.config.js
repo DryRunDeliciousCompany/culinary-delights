@@ -9,5 +9,8 @@ module.exports = {
   },
   search: {
     MAX_ITEMS_PER_PAGE: 5
+  },
+  google: {
+    API_KEY: "AIzaSyD3hHjfdmp_2nktWTLQ_h7Nkrb8Esample"
   }
 };
