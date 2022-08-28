@@ -23,8 +23,8 @@ terraform {
 provider "aws" {
   profile = "terraform"
   region  = "ap-northeast-1"
-  # access_key = "AKIAIOSFODNN7EXAMPLe"
-  # secret_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLeKEY"
+  # access_key = "AKIAIOSFODNN7EXAMPLE"
+  # secret_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 }
 
 provider "aws" {
