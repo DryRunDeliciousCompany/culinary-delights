@@ -11,8 +11,8 @@ defaults:
     shell: bash
 
 jobs:
-  setup:
-    name: "Setup"
+  verify:
+    name: "Verify"
     runs-on: "ubuntu-20.04"
     steps:
       - name: Checkout
@@ -20,7 +20,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: gitleaks/gitleaks-action@v2
+      - name: Scan secrets
+        uses: GitGuardian/ggshield-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}}
+          GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
+          GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
+          GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
