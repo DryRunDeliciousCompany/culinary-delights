@@ -12,6 +12,10 @@ env:
   WORKING_DIRECTORY: "10_infra"
   AWS_REGION: ap-northeast-1
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   preview:
     name: Preview
