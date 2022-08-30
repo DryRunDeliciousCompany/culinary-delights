@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - "10_infra/**"
-
   workflow_dispatch:
 
 env:
