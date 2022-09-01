@@ -20,6 +20,10 @@ jobs:
   preview:
     name: Preview
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
