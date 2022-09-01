@@ -74,6 +74,11 @@ jobs:
           echo "exit code is $RES"
           echo "::set-output name=exitcode::$RES"
 
+      - run: |
+          echo "steps.plan.outcome    : ${{ steps.plan.outcome }}"
+          echo "steps.plan.conclusion : ${{ steps.plan.conclusion }}"
+          echo "exitcode : ${{ steps.plan.outputs.exitcode }}"
+
       # Send slack message
       - name: Send slack message
         if: steps.plan.outcome == 'failure'
