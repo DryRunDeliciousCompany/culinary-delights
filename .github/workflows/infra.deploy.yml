@@ -71,16 +71,9 @@ jobs:
             -detailed-exitcode \
             -input=false
 
-      - name: check status
-        if: always()
-        run: |
-          echo "steps.plan.outcome    : ${{ steps.plan.outcome }}"
-          echo "steps.plan.conclusion : ${{ steps.plan.conclusion }}"
-
       # Send slack message
       - name: Send slack message
         if: steps.plan.outcome == 'failure'
-        # if: steps.plan.outputs.exitcode != 0
         uses: slackapi/slack-github-action@v1.18.0
         with:
           payload: |
@@ -110,7 +103,6 @@ jobs:
     needs: 
       - preview
     if: needs.preview.outputs.TF_PLAN_OUTCOME == 'failure'
-    # if: needs.preview.outputs.TF_PLAN_EXITCODE != 0
     environment: production
     steps:
       - name: Checkout
