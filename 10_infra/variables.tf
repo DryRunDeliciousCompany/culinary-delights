@@ -12,12 +12,12 @@ variable "environment" {
 }
 
 variable "username" {
-  type    = string
-  default = "admin"
+  type      = string
+  default   = "admin"
   sensitive = true
 }
 
 variable "password" {
-  type = string
+  type      = string
   sensitive = true
 }
