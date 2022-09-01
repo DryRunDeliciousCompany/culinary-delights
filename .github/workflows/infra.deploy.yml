@@ -70,7 +70,6 @@ jobs:
       - preview
     environment: production
     steps:
-      - run: echo "Hello World !"
       - name: Checkout
         uses: actions/checkout@v3
 
