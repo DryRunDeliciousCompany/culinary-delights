@@ -30,7 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
-      TF_PLAN_EXITCODE: ${{ steps.plan.outputs.exitcode }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -70,16 +69,13 @@ jobs:
             -var="username=${{ secrets.MYSQL_USERNAME }}" \
             -var="password=${{ secrets.MYSQL_PASSWORD }}" \
             -detailed-exitcode \
-            -input=false; RES=$?;
-          echo "exit code is $RES"
-          echo "::set-output name=exitcode::$RES"
+            -input=false
 
       - name: check status
         if: always()
         run: |
           echo "steps.plan.outcome    : ${{ steps.plan.outcome }}"
           echo "steps.plan.conclusion : ${{ steps.plan.conclusion }}"
-          echo "exitcode : ${{ steps.plan.outputs.exitcode }}"
 
       # Send slack message
       - name: Send slack message
