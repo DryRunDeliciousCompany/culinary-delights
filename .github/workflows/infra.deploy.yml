@@ -55,8 +55,13 @@ jobs:
       - name: Terraform Plan
         id: plan
         # if: github.event_name == 'pull_request'
-        run: terraform plan -detailed-exitcode -input=false
         continue-on-error: true
+        run: |
+          terraform plan \
+            -var="username=${{ secrets.MYSQL_USERNAME }}" \
+            -var="password=${{ secrets.MYSQL_PASSWORD }}" \
+            -detailed-exitcode \
+            -input=false
 
   deploy:
     name: Deploy

@@ -11,15 +11,13 @@ variable "environment" {
   default = "dev"
 }
 
-variable "domain" {
-  type = string
-}
-
 variable "username" {
   type    = string
   default = "admin"
+  sensitive = true
 }
 
 variable "password" {
   type = string
+  sensitive = true
 }
