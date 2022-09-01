@@ -28,6 +28,8 @@ jobs:
   preview:
     name: Preview
     runs-on: ubuntu-latest
+    outputs:
+      TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -59,6 +61,7 @@ jobs:
         id: plan
         # if: github.event_name == 'pull_request'
         continue-on-error: true
+        shell: bash +e {0}
         run: |
           terraform plan \
             -var="project=${{ env.TF_PROJECT}}" \
@@ -66,7 +69,9 @@ jobs:
             -var="username=${{ secrets.MYSQL_USERNAME }}" \
             -var="password=${{ secrets.MYSQL_PASSWORD }}" \
             -detailed-exitcode \
-            -input=false
+            -input=false; RES=$?;
+          echo "exit code is $RES"
+          echo "::set-output name=exitcode::$RES"
 
       # Send slack message
       - name: Send slack message
@@ -99,6 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: 
       - preview
+    if: needs.preview.outputs.TF_PLAN_OUTCOME == 'failure'
     environment: production
     steps:
       - name: Checkout
