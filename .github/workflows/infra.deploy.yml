@@ -3,7 +3,7 @@ name: "[infra] Preview & Deploy"
 on:
   push:
     branches:
-      - main
+      - "master"
     paths:
       - "10_infra/**"
   workflow_dispatch:
