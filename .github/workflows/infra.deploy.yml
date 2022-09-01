@@ -68,6 +68,32 @@ jobs:
             -detailed-exitcode \
             -input=false
 
+      # Send slack message
+      - name: Send slack message
+        if: ${{ steps.plan.outcome == 'failure' }}
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "attachments": [
+                {
+                  "color": "danger",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "* Terraform Approve * \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
