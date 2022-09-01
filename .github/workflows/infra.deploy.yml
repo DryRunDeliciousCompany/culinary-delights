@@ -13,7 +13,7 @@ env:
   AWS_REGION: ap-northeast-1
   TF_VERSION: 1.2.8
   TF_PROJECT: tastylog
-  TF_ENVIRONMENT: test
+  TF_ENVIRONMENT: dev
 
 defaults:
   run:
@@ -83,7 +83,7 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "* Terraform Approve * \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                        "text": "*Terraform Require Review* \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                       }
                     }
                   ]
