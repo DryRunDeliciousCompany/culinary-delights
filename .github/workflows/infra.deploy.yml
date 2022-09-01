@@ -30,6 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
+      TF_PLAN_EXITCODE: ${{ steps.plan.outputs.exitcode }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -75,7 +76,7 @@ jobs:
 
       # Send slack message
       - name: Send slack message
-        if: ${{ steps.plan.outcome == 'failure' }}
+        if: steps.plan.outputs.exitcode == 2
         uses: slackapi/slack-github-action@v1.18.0
         with:
           payload: |
@@ -104,7 +105,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: 
       - preview
-    if: needs.preview.outputs.TF_PLAN_OUTCOME == 'failure'
+    if: needs.preview.outputs.TF_PLAN_EXITCODE == 2
     environment: production
     steps:
       - name: Checkout
