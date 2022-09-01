@@ -12,6 +12,8 @@ env:
   WORKING_DIRECTORY: "10_infra"
   AWS_REGION: ap-northeast-1
   TF_VERSION: 1.2.8
+  TF_PROJECT: tastylog
+  TF_ENVIRONMENT: test
 
 defaults:
   run:
@@ -59,6 +61,8 @@ jobs:
         continue-on-error: true
         run: |
           terraform plan \
+            -var="project=${{ env.TF_PROJECT}}" \
+            -var="environment=${{ env.TF_ENVIRONMENT}}" \
             -var="username=${{ secrets.MYSQL_USERNAME }}" \
             -var="password=${{ secrets.MYSQL_PASSWORD }}" \
             -detailed-exitcode \
@@ -94,6 +98,8 @@ jobs:
         # if: github.event_name == 'pull_request'
         run: |
           terraform apply \
+            -var="project=${{ env.TF_PROJECT}}" \
+            -var="environment=${{ env.TF_ENVIRONMENT}}" \
             -var="username=${{ secrets.MYSQL_USERNAME }}" \
             -var="password=${{ secrets.MYSQL_PASSWORD }}" \
             -auto-approve \
