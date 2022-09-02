@@ -91,3 +91,36 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
+
+  notify:
+    name: "Slack notify"
+    needs:
+      - build-push
+      - publish
+    if: always()
+    runs-on: "ubuntu-20.04"
+    steps:
+      # Send slack message
+      - name: Send slack message
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "attachments": [
+                {
+                  "color": "danger",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "*Publish Finished* \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
