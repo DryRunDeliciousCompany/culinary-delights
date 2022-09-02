@@ -83,7 +83,7 @@ jobs:
             {
               "attachments": [
                 {
-                  "color": "danger",
+                  "color": "",
                   "blocks": [
                     {
                       "type": "section",
