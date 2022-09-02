@@ -78,7 +78,7 @@ jobs:
 
       # Send slack message
       - name: Send slack message
-        if: steps.plan.outcome == 'failure'
+        if: steps.plan.outputs.exitcode == 2
         uses: slackapi/slack-github-action@v1.18.0
         with:
           payload: |
