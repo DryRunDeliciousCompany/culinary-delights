@@ -11,3 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Hello World !"
+      - name: Test script
+        shell: bash +e {0}
+        run: |
+          RES=$(exit 2)
+          echo $RES
