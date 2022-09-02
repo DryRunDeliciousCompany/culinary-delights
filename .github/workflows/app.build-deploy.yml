@@ -108,7 +108,7 @@ jobs:
             {
               "attachments": [
                 {
-                  "color": "${{ ( success() && '#198754' ) || '#bb2d3b' }}",
+                  "color": "${{ ( success() == true && '#198754' ) || '#bb2d3b' }}",
                   "blocks": [
                     {
                       "type": "section",
