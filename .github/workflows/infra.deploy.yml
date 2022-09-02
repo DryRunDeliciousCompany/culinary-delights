@@ -63,7 +63,6 @@ jobs:
         id: plan
         # if: github.event_name == 'pull_request'
         continue-on-error: true
-        shell: bash +e {0}
         run: |
           terraform plan \
             -var="project=${{ env.TF_PROJECT}}" \
@@ -73,6 +72,9 @@ jobs:
             -detailed-exitcode \
             -input=false
           echo "::set-output name=exitcode::$?"
+
+      - run: |
+          echo "exit code : ${{ steps.plan.outputs.exitcode }}"
 
       # Send slack message
       - name: Send slack message
