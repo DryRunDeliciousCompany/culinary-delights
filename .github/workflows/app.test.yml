@@ -95,32 +95,6 @@ jobs:
           \`\`\`
           EOS
 
-      # Send slack message
-      - name: Send slack message
-        if: success() || failure()
-        uses: slackapi/slack-github-action@v1.18.0
-        with:
-          payload: |
-            {
-              "attachments": [
-                {
-                  "color": "danger",
-                  "blocks": [
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
-                        "text": "*Lint Check Result* \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
   unit-test:
     name: "Unit Test"
     needs:
@@ -182,12 +156,3 @@ jobs:
           SUMMARY="${SUMMARY//$'\r'/'%0D'}"
           echo "::set-output name=summary::$SUMMARY)"
 
-      # Slack notify
-      - name: Slack notify
-        if: success() || failure()
-        uses: ./.github/actions/slack-notifier/
-        with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          slack-message-status: ${{ steps.lint-check-exec.outcome }}
-          slack-message-title: Unit Test summary
-          slack-message-body: ${{ steps.unit-test-summary.outputs.summary }}
