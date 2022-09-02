@@ -16,4 +16,4 @@ jobs:
         shell: bash +e {0}
         run: |
           RES=$(exit 2)
-          echo $RES
+          echo "result: $RES"
