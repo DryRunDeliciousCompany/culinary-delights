@@ -63,15 +63,10 @@ jobs:
         continue-on-error: true
         shell: bash +e {0}
         run: |
-          terraform plan \
-            -var="project=${{ env.TF_PROJECT}}" \
-            -var="environment=${{ env.TF_ENVIRONMENT}}" \
-            -var="username=${{ secrets.MYSQL_USERNAME }}" \
-            -var="password=${{ secrets.MYSQL_PASSWORD }}" \
-            -detailed-exitcode \
-            -input=false
-          RES=$?
-          echo "trraform exit code: $RES"
+          RES=$(terraform plan -var="project=${{ env.TF_PROJECT}}" -var="environment=${{ env.TF_ENVIRONMENT}}" -var="username=${{ secrets.MYSQL_USERNAME }}" -var="password=${{ secrets.MYSQL_PASSWORD }}" -detailed-exitcode -input=false)
+          ECD=$?
+          echo "trraform return code: $RES"
+          echo "trraform exit code  : $ECD"
 
       # Send slack message
       - name: Send slack message
