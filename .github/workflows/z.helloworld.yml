@@ -15,5 +15,6 @@ jobs:
       - name: Test script
         shell: bash +e {0}
         run: |
-          RES=$(exit 2)
+          $(exit 2)
+          RES=$?
           echo "result: $RES"
