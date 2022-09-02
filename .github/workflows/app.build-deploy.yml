@@ -114,7 +114,7 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "*Publish Finished* \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                        "text": "*Publish ${{ github.action_status }}* \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                       }
                     }
                   ]
