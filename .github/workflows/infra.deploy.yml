@@ -70,6 +70,8 @@ jobs:
             -var="password=${{ secrets.MYSQL_PASSWORD }}" \
             -detailed-exitcode \
             -input=false
+          RES=$?
+          echo "trraform exit code: $RES"
 
       # Send slack message
       - name: Send slack message
