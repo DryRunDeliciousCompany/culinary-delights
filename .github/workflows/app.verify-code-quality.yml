@@ -65,13 +65,13 @@ jobs:
             {
               "attachments": [
                 {
-                  "color": "danger",
+                  "color": "#bb2d3b",
                   "blocks": [
                     {
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "*Test ERROR* \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                        "text": "*Code Quality Issue* \n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                       }
                     }
                   ]
